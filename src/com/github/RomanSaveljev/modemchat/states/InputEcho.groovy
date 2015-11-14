@@ -2,20 +2,29 @@ package com.github.RomanSaveljev.modemchat.states
 
 import com.github.RomanSaveljev.modemchat.context.V250Settings
 
-/**
- * Created by user on 11/11/15.
- */
-class InputEcho implements StateHandler {
-    V250Settings context
-
-    @Override
-    List input(Queue data) {
-        def output = [] as ArrayList
-        assert data.size() > 0
-        def c = data.poll()
-        if (context.v250.echo) {
-            output << c
+abst InputEcho {
+    static InputEcho New(V250Settings.V250 v250) {
+        if (v250.echo) {
+            return new InputEcho() {
+                @Override
+                List<Character> echoInput(Queue<Character> data) {
+                    assert !data.empty
+                    return [data.poll()]
+                }
+            }
+        } else {
+            return NewNoEcho()
         }
-        return output
     }
+    static InputEcho NewNoEcho() {
+        return new InputEcho() {
+            @Override
+            List<Character> echoInput(Queue<Character> data) {
+                assert !data.empty
+                data.poll()
+                return []
+            }
+        }
+    }
+    List<Character> echoInput(Queue<Character> data)
 }
