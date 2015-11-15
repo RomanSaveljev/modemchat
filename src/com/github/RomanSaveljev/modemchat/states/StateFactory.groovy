@@ -1,37 +1,48 @@
 package com.github.RomanSaveljev.modemchat.states
 
 import com.github.RomanSaveljev.modemchat.context.StatefulContext
+import com.github.RomanSaveljev.modemchat.syntax.EchoInput
 
-/**
- * Created by user on 11/14/15.
- */
 class StateFactory {
+    static final char CAPITAL_T = 'T'
+    static final char SMALL_T = 't'
     StateHandler buildPrefix(StatefulContext context) {
-        new Prefix(context: context, echo: InputEcho.New(context))
+        new Prefix(context)
     }
+
     StateHandler buildCapitalA(StatefulContext context) {
-        new PrefixA(context: context, echo: InputEcho.New(context)) {
+        new PrefixA(context) {
             @Override
             boolean isAttention(char c) {
-                return c == 'T'
+                c == CAPITAL_T
             }
         }
     }
+
     StateHandler buildSmallA(StatefulContext context) {
-        new PrefixA(context: context, echo: InputEcho.New(context)) {
+        new PrefixA(context) {
             @Override
             boolean isAttention(char c) {
-                return c == 't'
+                c == SMALL_T
             }
         }
     }
+
     StateHandler buildAssembleCommand(StatefulContext context) {
-        new AssembleCommand(context: context, echo: InputEcho.New(context))
+        new AssembleCommand(context)
     }
+
     StateHandler buildRepeatCommand(StatefulContext context) {
-        new AssembleCommand(context: context, echo: InputEcho.NewNoEcho())
+        def noEcho = new EchoInput() {
+            @Override
+            boolean getEchoEnabled() {
+                return false
+            }
+        }
+        new AssembleCommand(context, noEcho)
     }
+
     StateHandler buildExecuteCommand(StatefulContext context) {
-        new ExecuteCommand(context: context, echo: InputEcho.New(context))
+        new ExecuteCommand(context)
     }
 }

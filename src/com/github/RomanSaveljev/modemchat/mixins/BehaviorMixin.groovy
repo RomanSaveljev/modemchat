@@ -1,8 +1,7 @@
 package com.github.RomanSaveljev.modemchat.mixins
 
-/**
- * Created by user on 11/14/15.
- */
+import com.github.RomanSaveljev.modemchat.states.ExecuteCommand
+
 interface BehaviorMixin {
-    List<Character> input(Queue<Character> data)
+    List<Character> input(ExecuteCommand.Api api, Queue<Character> data)
 }

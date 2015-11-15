@@ -1,65 +1,70 @@
 package com.github.RomanSaveljev.modemchat.states
 
 import com.github.RomanSaveljev.modemchat.context.StatefulContext
-import com.github.RomanSaveljev.modemchat.context.V250Settings
 import com.github.RomanSaveljev.modemchat.mixins.BehaviorMixin
-import com.github.RomanSaveljev.modemchat.syntax.ResultCodeFormatter
 
-/**
- * Created by user on 11/14/15.
- */
-class ExecuteCommand implements StateHandler, ResultCodeFormatter {
+class ExecuteCommand implements StateHandler {
+    interface Api {
+        void goTo(String mixin)
+
+        void changeState(StateHandler state)
+
+        void resetState()
+
+        StatefulContext getContext()
+    }
     StatefulContext context
     private String activeMixin = "start"
-    private def mixins = [] as Map
-    ExecuteCommand(StatefulContext context) {
-        this.context = context
+    private def mixins = [] as Map<String, BehaviorMixin>
+    private def api = new Api() {
+        @Override
+        void goTo(String mixin) {
+            doGoTo(mixin)
+        }
+
+        @Override
+        void changeState(StateHandler state) {
+            doChangeState(state)
+        }
+
+        @Override
+        void resetState() {
+            changeState(null)
+        }
+
+        @Override
+        StatefulContext getContext() {
+            return context
+        }
     }
+
     @Override
     List<Character> input(Queue<Character> data) {
-        return null
+        if (data.empty) {
+            return []
+        } else {
+            // must be there unless goTo was neglected
+            assert mixins.containsKey(activeMixin)
+            return mixins[activeMixin].input(api, data)
+        }
     }
-    void postNotification() {
+    // Have to keep the interface simple, so other JVM language could tap into it
+    ExecuteCommand mix(String name, BehaviorMixin mixin) {
+        mixins[name] = mixin
+        return this
+    }
+
+    private void postNotification() {
 
     }
-    void mix(BehaviorMixin... mixins) {
 
-    }
-    void mix(def... mixins) {
-
-    }
-    void goTo(String mixin) {
+    private void doGoTo(String mixin) {
         activeMixin = mixin
         postNotification()
     }
-    void changeState(StateHandler state) {
+
+    private void doChangeState(StateHandler state) {
         context.stateHandler = state
         postNotification()
-    }
-    void resetState() {
-        changeState(null)
-    }
-    List<Character> formatResultCode(List<Character> result) {
-        def output = []
-        context.v250.with {
-            if (!suppressed) {
-                if (verbose) {
-                    output.addAll([s3, s4])
-                }
-                output.addAll(result)
-
-            }
-        }
-        if (!context.v250.suppressed) {
-            if (context.v250.verbose) {
-                output.addAll([context.v250.s3, context.v250.s4])
-            }
-        }
-        return output
-    }
-
-    @Override
-    V250Settings.V250 getV250() {
-        context.v250
     }
 }

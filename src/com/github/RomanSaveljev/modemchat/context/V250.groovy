@@ -1,8 +1,5 @@
 package com.github.RomanSaveljev.modemchat.context
 
-/**
- * Created by user on 11/15/15.
- */
 class V250 {
     interface Uses {
         V250 getV250()
