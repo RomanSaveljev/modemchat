@@ -7,6 +7,7 @@ import com.github.RomanSaveljev.modemchat.states.StateFactory
 import com.github.RomanSaveljev.modemchat.states.StateHandler
 
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 class ModemChat implements StatefulContext, NotificationListener {
     V250 v250 = new V250()
@@ -29,12 +30,29 @@ class ModemChat implements StatefulContext, NotificationListener {
         output.flush()
     }
 
+    private void singleDataLoop(Queue<Character> data) {
+        def buffer = stateHandler.input(data)
+        writeOutput(buffer)
+    }
+
+    private void feedData(List<Byte> data) {
+        def characters = data.collect({new Character(it as char)}) as Queue<Character>
+        // null is a special state, which means starting state
+        if (!stateHandler) {
+            stateHandler = stateFactory.buildPrefix(this)
+        }
+        // always kick the handler at least once - could be a notification
+        singleDataLoop(characters)
+        while (!characters.empty) {
+            singleDataLoop(characters)
+        }
+    }
+
     void postNotification() {
         executor.execute(new Runnable() {
             @Override
             void run() {
-                def buffer = stateHandler.input([] as Queue<Character>)
-                writeOutput(buffer)
+                feedData([])
             }
         })
     }
@@ -43,12 +61,18 @@ class ModemChat implements StatefulContext, NotificationListener {
         def inputThread = new Thread(new Runnable() {
             @Override
             void run() {
-                while (true) {
-                    int b = input.read()
-                    if (b == -1) {
-                        break
-                    } else {
+                try {
+                    //noinspection GroovyInfiniteLoopStatement
+                    while (true) {
+                        int b = input.read()
+                        if (b == -1) {
+                            throw new InterruptedException()
+                        }
                         postData(b as byte)
+                    }
+                } catch(Exception ignored) {
+                    if (!executor.shutdown) {
+                        executor.shutdown()
                     }
                 }
             }
@@ -56,13 +80,12 @@ class ModemChat implements StatefulContext, NotificationListener {
                 executor.execute(new Runnable() {
                     @Override
                     void run() {
-                        def buffer = stateHandler.input([b] as Queue<Character>)
-                        writeOutput(buffer)
+                        feedData([b])
                     }
                 })
             }
         })
         inputThread.start()
-        executor.
+        while (!executor.awaitTermination(60, TimeUnit.SECONDS));
     }
 }

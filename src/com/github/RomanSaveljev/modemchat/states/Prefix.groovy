@@ -24,6 +24,7 @@ class Prefix implements StateHandler {
     }
 
     private List<Character> doInput(Queue<Character> data) {
+        System.err.println()
         def c = data.peek()
         if (c == CAPITAL_A) {
             context.stateHandler = context.stateFactory.buildCapitalA(context)

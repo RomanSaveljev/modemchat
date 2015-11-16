@@ -38,6 +38,10 @@ class ExecuteCommand implements StateHandler {
         }
     }
 
+    ExecuteCommand(StatefulContext context) {
+        this.context = context
+    }
+
     @Override
     List<Character> input(Queue<Character> data) {
         if (data.empty) {
