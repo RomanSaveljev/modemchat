@@ -19,12 +19,12 @@ class ExecuteCommand implements StateHandler {
     private def api = new Api() {
         @Override
         void goTo(String mixin) {
-            doGoTo(mixin)
+            ExecuteCommand.this.goTo(mixin)
         }
 
         @Override
         void changeState(StateHandler state) {
-            doChangeState(state)
+            ExecuteCommand.this.changeState(state)
         }
 
         @Override
@@ -58,12 +58,15 @@ class ExecuteCommand implements StateHandler {
 
     }
 
-    private void doGoTo(String mixin) {
+    private void goTo(String mixin) {
+        if (!mixins.containsKey(mixin)) {
+            throw new Exception("${mixin} must name an existing key")
+        }
         activeMixin = mixin
         postNotification()
     }
 
-    private void doChangeState(StateHandler state) {
+    private void changeState(StateHandler state) {
         context.stateHandler = state
         postNotification()
     }

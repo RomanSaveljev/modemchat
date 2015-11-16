@@ -10,4 +10,5 @@ interface StatefulContext {
     List<Character> getRepeatable()
     List<Character> getCommandLine()
     StateFactory getStateFactory()
+    NotificationListener getListener()
 }
