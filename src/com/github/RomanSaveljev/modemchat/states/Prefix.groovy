@@ -2,17 +2,20 @@ package com.github.RomanSaveljev.modemchat.states
 
 import com.github.RomanSaveljev.modemchat.context.StatefulContext
 import com.github.RomanSaveljev.modemchat.syntax.EchoInput
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class Prefix implements StateHandler {
     static final char CAPITAL_A = 'A'
     static final char SMALL_A = 'a'
-    private StatefulContext context
+    StatefulContext context
     private EchoInput echo = new EchoInput() {
         @Override
         boolean getEchoEnabled() {
             context.v250.echo
         }
     }
+    final Logger logger = LoggerFactory.getLogger(Prefix.class)
 
     Prefix(StatefulContext context) {
         this.context = context
@@ -20,6 +23,7 @@ class Prefix implements StateHandler {
 
     @Override
     List<Character> input(Queue<Character> data) {
+        logger.debug("input(${data})")
         data.empty ? [] : doInput(data)
     }
 

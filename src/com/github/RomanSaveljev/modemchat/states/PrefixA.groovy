@@ -2,22 +2,28 @@ package com.github.RomanSaveljev.modemchat.states
 
 import com.github.RomanSaveljev.modemchat.context.StatefulContext
 import com.github.RomanSaveljev.modemchat.syntax.EchoInput
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 abstract class PrefixA implements StateHandler {
     static final char SOLIDUS = '/'
-    private StatefulContext context
+    protected StatefulContext context
     private EchoInput echo = new EchoInput() {
         @Override
         boolean getEchoEnabled() {
-            context.v250.echo
+            println PrefixA.this.class
+            println this.dump()
+            PrefixA.this.@context.v250.echo
         }
     }
+    final Logger logger = LoggerFactory.getLogger(PrefixA.class)
 
     PrefixA(StatefulContext context) {
         this.context = context
     }
 
     List<Character> input(Queue<Character> data) {
+        logger.debug("input(${data})")
         data.empty ? [] : doInput(data)
     }
 

@@ -5,6 +5,8 @@ import com.github.RomanSaveljev.modemchat.context.StatefulContext
 import com.github.RomanSaveljev.modemchat.context.V250
 import com.github.RomanSaveljev.modemchat.states.StateFactory
 import com.github.RomanSaveljev.modemchat.states.StateHandler
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -19,6 +21,7 @@ class ModemChat implements StatefulContext, NotificationListener {
     private def executor = Executors.newSingleThreadExecutor()
     private InputStream input
     private OutputStream output
+    private final Logger logger = LoggerFactory.getLogger(ModemChat.class)
 
     ModemChat(InputStream input, OutputStream output) {
         this.input = input
@@ -58,6 +61,7 @@ class ModemChat implements StatefulContext, NotificationListener {
     }
 
     void loop() {
+        logger.debug("Enter the loop")
         def inputThread = new Thread(new Runnable() {
             @Override
             void run() {
