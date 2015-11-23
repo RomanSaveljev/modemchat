@@ -18,14 +18,10 @@ class ExtendedCommand {
         while (!command.empty) {
             def c = command.peek()
             if (allowed.isEnabled(PLUS)) {
-                if (c == PLUS) {
-                    result.push(command.poll())
-                    allowed.enableOnly(ALPHA, EXTENDED)
-                    continue
-                } else {
-                    throw new Error("BUG! calling ExtendedCommand#next() requires a command to start with +")
-                    break
-                }
+                assert c == PLUS : new Error("BUG! calling ExtendedCommand#next() requires a command to start with +")
+                result.push(command.poll())
+                allowed.enableOnly(ALPHA, EXTENDED)
+                continue
             }
             if (allowed.isEnabled(ALPHA)) {
                 if (Character.isLetter(c)) {
