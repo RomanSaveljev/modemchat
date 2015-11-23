@@ -2,6 +2,7 @@ package com.github.RomanSaveljev.modemchat.states
 
 import com.github.RomanSaveljev.modemchat.context.StatefulContext
 import com.github.RomanSaveljev.modemchat.syntax.EchoInput
+import groovy.json.StringEscapeUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -11,8 +12,6 @@ abstract class PrefixA implements StateHandler {
     private EchoInput echo = new EchoInput() {
         @Override
         boolean getEchoEnabled() {
-            println PrefixA.this.class
-            println this.dump()
             PrefixA.this.@context.v250.echo
         }
     }
@@ -23,7 +22,7 @@ abstract class PrefixA implements StateHandler {
     }
 
     List<Character> input(Queue<Character> data) {
-        logger.debug("input(${data})")
+        logger.debug("input(${StringEscapeUtils.escapeJava(data.join(""))})")
         data.empty ? [] : doInput(data)
     }
 

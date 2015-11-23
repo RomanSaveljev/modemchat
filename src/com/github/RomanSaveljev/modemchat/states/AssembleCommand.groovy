@@ -4,6 +4,9 @@ import com.github.RomanSaveljev.modemchat.context.StatefulContext
 import com.github.RomanSaveljev.modemchat.context.V250
 import com.github.RomanSaveljev.modemchat.syntax.CompactCommandLine
 import com.github.RomanSaveljev.modemchat.syntax.EchoInput
+import groovy.json.StringEscapeUtils
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class AssembleCommand implements StateHandler {
     private StatefulContext context
@@ -24,6 +27,7 @@ class AssembleCommand implements StateHandler {
             context.commandLine
         }
     }
+    final Logger logger = LoggerFactory.getLogger(AssembleCommand.class)
 
     AssembleCommand(StatefulContext context) {
         this.context = context
@@ -49,6 +53,7 @@ class AssembleCommand implements StateHandler {
 
     @Override
     List<Character> input(Queue<Character> data) {
+        logger.debug("input(${StringEscapeUtils.escapeJava(data.join(""))})")
         data.empty ? [] : doInput(data)
     }
 

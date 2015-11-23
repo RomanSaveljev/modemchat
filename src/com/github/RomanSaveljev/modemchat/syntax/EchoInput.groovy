@@ -1,5 +1,6 @@
 package com.github.RomanSaveljev.modemchat.syntax
 
+import groovy.json.StringEscapeUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -10,7 +11,7 @@ abstract class EchoInput {
     List<Character> consumeAndEchoOne(Queue<Character> data) {
         assert !data.empty
         def c = data.poll()
-        logger.debug("${c} consumed")
+        logger.debug("${StringEscapeUtils.escapeJava(c.toString())} consumed")
         if (echoEnabled) {
             return [c]
         } else {

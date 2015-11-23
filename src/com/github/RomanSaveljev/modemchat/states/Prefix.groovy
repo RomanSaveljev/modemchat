@@ -2,6 +2,7 @@ package com.github.RomanSaveljev.modemchat.states
 
 import com.github.RomanSaveljev.modemchat.context.StatefulContext
 import com.github.RomanSaveljev.modemchat.syntax.EchoInput
+import groovy.json.StringEscapeUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -23,12 +24,11 @@ class Prefix implements StateHandler {
 
     @Override
     List<Character> input(Queue<Character> data) {
-        logger.debug("input(${data})")
+        logger.debug("input(${StringEscapeUtils.escapeJava(data.join(""))})")
         data.empty ? [] : doInput(data)
     }
 
     private List<Character> doInput(Queue<Character> data) {
-        System.err.println()
         def c = data.peek()
         if (c == CAPITAL_A) {
             context.stateHandler = context.stateFactory.buildCapitalA(context)
