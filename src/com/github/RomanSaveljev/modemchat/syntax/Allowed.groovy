@@ -3,37 +3,37 @@ package com.github.RomanSaveljev.modemchat.syntax
 // FSM for lazies
 // Hard-ported from CoffeeScript implementation
 class Allowed {
-    private def flags = [] as Map<String, Boolean>
+    private Map<Object, Boolean> flags
 
-    Allowed(String... enabled) {
+    Allowed(Object... enabled) {
         enableOnly(enabled)
     }
 
     Allowed() {
     }
 
-    void enable(String... what) {
+    void enable(Object... what) {
         for (w in what) {
             flags[w] = true
         }
     }
 
-    void disable(String... what) {
+    void disable(Object... what) {
         for (w in what) {
             flags[w] = false
         }
     }
 
-    void enableOnly(String... what) {
+    void enableOnly(Object... what) {
         disableAll()
         enable(what)
     }
 
     void disableAll() {
-        flags = [] as Map<String, Boolean>
+        flags = [:]
     }
 
-    boolean isEnabled(String flag) {
+    boolean isEnabled(Object flag) {
         flags.containsKey(flag) && flags[flag]
     }
 }

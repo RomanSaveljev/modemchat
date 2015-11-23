@@ -1,14 +1,14 @@
 package com.github.RomanSaveljev.modemchat.syntax
 
 class BasicCommand {
-    private static final String AMP = "&"
+    private static final char AMP = '&'
     private static final String CMD = "cmd"
-    private static final String D = "D"
-    private static final String S = "S"
+    private static final char D = 'D'
+    private static final char S = 'S'
     private static final String S_INDEX = "sIndex"
     private static final String S_INDEX_MORE = "sIndexMore"
-    private static final String EQUALS = "="
-    private static final String QUESTION = "?"
+    private static final char EQUALS = '='
+    private static final char QUESTION = '?'
 
     static List<Character> next(Queue<Character> command) {
         def result = [] as List<Character>
@@ -17,7 +17,7 @@ class BasicCommand {
         while (!command.empty) {
             def c = command.peek()
             if (allowed.isEnabled(D)) {
-                if (c == D as char) {
+                if (c == D) {
                     // Dial command does not understand =?, dial string follows immediately
                     // D is consumed and the rest is expected to be handled by the command itself
                     result.push(command.poll())
@@ -25,21 +25,21 @@ class BasicCommand {
                 }
             }
             if (allowed.isEnabled(S)) {
-                if (c == S as char) {
+                if (c == S) {
                     result.push(command.poll())
                     allowed.enableOnly(S_INDEX)
                     continue
                 }
             }
             if (allowed.isEnabled(AMP)) {
-                if (c == AMP as char) {
+                if (c == AMP) {
                     result.push(command.poll())
                     allowed.enableOnly(CMD)
                     continue
                 }
             }
             if (allowed.isEnabled(CMD)) {
-                if (Character.isAlphabetic(c)) {
+                if (Character.isLetter(c)) {
                     result.push(command.poll())
                     allowed.enableOnly(EQUALS, QUESTION)
                     continue
@@ -50,7 +50,43 @@ class BasicCommand {
                     break
                 }
             }
-            if (allowed.isEnabled())
+            if (allowed.isEnabled(S_INDEX)) {
+                if (Character.isDigit(c)) {
+                    result.push(command.poll())
+                    allowed.enableOnly(S_INDEX_MORE, EQUALS, QUESTION)
+                    continue
+                } else {
+                    // Index shall follow every S command
+                    result.clear()
+                    break
+                }
+            }
+            if (allowed.isEnabled(S_INDEX_MORE)) {
+                if (Character.isDigit(c)) {
+                    result.push(command.poll())
+                    continue
+                } else {
+                    // this is not a digit, maybe this is = or ?
+                    allowed.enableOnly(EQUALS, QUESTION)
+                }
+            }
+            if (allowed.isEnabled(EQUALS)) {
+                if (c == EQUALS) {
+                    result.push(command.poll())
+                    allowed.enableOnly(QUESTION)
+                    continue
+                }
+            }
+            if (allowed.isEnabled(QUESTION)) {
+                if (c == QUESTION) {
+                    result.push(command.poll())
+                    allowed.disableAll()
+                    continue
+                }
+            }
+            // Did not meet any criteria - can not continue
+            break
         }
+        return result
     }
 }
