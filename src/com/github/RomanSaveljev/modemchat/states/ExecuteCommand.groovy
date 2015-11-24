@@ -1,11 +1,10 @@
 package com.github.RomanSaveljev.modemchat.states
 
 import com.github.RomanSaveljev.modemchat.context.StatefulContext
-import com.github.RomanSaveljev.modemchat.mixins.BasicCommand
+import com.github.RomanSaveljev.modemchat.mixins.BasicCommandMixin
 import com.github.RomanSaveljev.modemchat.mixins.BehaviorMixin
-import com.github.RomanSaveljev.modemchat.mixins.Start
+import com.github.RomanSaveljev.modemchat.mixins.StartMixin
 import groovy.json.StringEscapeUtils
-import org.apache.tools.ant.taskdefs.Exec
 import org.codehaus.groovy.runtime.MethodClosure
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -21,13 +20,11 @@ class ExecuteCommand implements StateHandler {
 
         void changeState(StateHandler state)
 
-        void resetState()
-
         StatefulContext getContext()
     }
     StatefulContext context
     private String activeMixin = Api.START
-    private def mixins = [] as Map<String, BehaviorMixin>
+    private def mixins = [:] as Map<String, BehaviorMixin>
     private def api = new Api() {
         @Override
         void goTo(String mixin) {
@@ -45,35 +42,24 @@ class ExecuteCommand implements StateHandler {
         }
 
         @Override
-        void resetState() {
-            changeState(null)
-        }
-
-        @Override
         StatefulContext getContext() {
-            return context
+            return ExecuteCommand.this.context
         }
     }
     final Logger logger = LoggerFactory.getLogger(ExecuteCommand.class)
 
     ExecuteCommand(StatefulContext context) {
         this.context = context
-        Start.mix(this)
-        BasicCommand.mix(this)
+        StartMixin.mix(this)
+        BasicCommandMixin.mix(this)
     }
 
     @Override
     List<Character> input(Queue<Character> data) {
         logger.debug("input(${StringEscapeUtils.escapeJava(data.join(""))})")
-        // must be there unless goTo was neglected
+        // must be there unless goTo was skipped
         assert mixins.containsKey(activeMixin)
         // every mixin must be able to handle empty input
-        return mixins[activeMixin].input(api, data)
-    }
-
-    private List<Character> doInput(Queue<Character> data) {
-        // must be there unless goTo was neglected
-        assert mixins.containsKey(activeMixin)
         return mixins[activeMixin].input(api, data)
     }
 
@@ -94,12 +80,12 @@ class ExecuteCommand implements StateHandler {
     }
 
     private void postNotification() {
-
+        context.listener.postNotification()
     }
 
     private void goTo(String mixin) {
         if (!mixins.containsKey(mixin)) {
-            throw new Exception("${mixin} must name an existing key")
+            throw new Exception("'${mixin}' must name existing mixin")
         }
         activeMixin = mixin
         postNotification()

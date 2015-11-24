@@ -6,7 +6,7 @@ abstract class CompactCommandLine {
 
     abstract List<Character> getRepeatable()
 
-    abstract List<Character> getCommandLine()
+    abstract Queue<Character> getCommandLine()
 
     void compactCommandLine() {
         commandLine.clear()
@@ -14,9 +14,9 @@ abstract class CompactCommandLine {
         for (c in repeatable) {
             inString = c == DOUBLE_QUOTE ? !inString : inString
             if (inString) {
-                commandLine.push(c)
+                commandLine.offer(c)
             } else if (c != SPACE) {
-                commandLine.push(Character.toUpperCase(c))
+                commandLine.offer(Character.toUpperCase(c))
             }
             // no else - spaces outside string constants are stripped
         }

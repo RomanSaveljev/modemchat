@@ -8,7 +8,7 @@ interface StatefulContext {
     StateHandler getStateHandler()
     void setStateHandler(StateHandler stateHandler)
     List<Character> getRepeatable()
-    List<Character> getCommandLine()
+    Queue<Character> getCommandLine()
     StateFactory getStateFactory()
     NotificationListener getListener()
 }

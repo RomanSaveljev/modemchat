@@ -2,9 +2,9 @@ package com.github.RomanSaveljev.modemchat.mixins
 
 import com.github.RomanSaveljev.modemchat.states.ExecuteCommand
 
-class Start implements BehaviorMixin {
+class StartMixin implements BehaviorMixin {
     static void mix(ExecuteCommand cmd) {
-        cmd.mix(ExecuteCommand.Api.START, new Start())
+        cmd.mix(ExecuteCommand.Api.START, new StartMixin())
     }
 
     @Override
@@ -26,6 +26,6 @@ class Start implements BehaviorMixin {
         } else {
             api.changeState(null)
         }
-        return null
+        return []
     }
 }

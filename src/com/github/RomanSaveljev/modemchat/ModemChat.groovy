@@ -16,7 +16,7 @@ class ModemChat implements StatefulContext, NotificationListener {
     StateFactory stateFactory = new StateFactory()
     StateHandler stateHandler
     List<Character> repeatable = []
-    List<Character> commandLine = []
+    Queue<Character> commandLine = []
     NotificationListener listener = this
     private def executor = Executors.newSingleThreadExecutor()
     private InputStream input

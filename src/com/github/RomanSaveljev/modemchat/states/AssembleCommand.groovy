@@ -23,7 +23,7 @@ class AssembleCommand implements StateHandler {
         }
 
         @Override
-        List<Character> getCommandLine() {
+        Queue<Character> getCommandLine() {
             context.commandLine
         }
     }
