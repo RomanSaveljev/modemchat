@@ -1,7 +1,18 @@
 package com.github.RomanSaveljev.modemchat.mixins
 
-/**
- * Created by romasave on 11/24/15.
- */
+import com.github.RomanSaveljev.modemchat.states.ExecuteCommand
+
 class BasicCommandMixinTest extends GroovyTestCase {
+    void testAllMixinsAreOneCharacterLength() {
+        def exec = new ExecuteCommand(null)
+        BasicCommandMixin.mix(exec)
+
+    }
+    void testAddsAlphaAndAmpersandMixins() {
+        def exec = new ExecuteCommand(null)
+        BasicCommandMixin.mix(exec)
+        exec.@mixins.keySet().each {
+            assert it.
+        }
+    }
 }

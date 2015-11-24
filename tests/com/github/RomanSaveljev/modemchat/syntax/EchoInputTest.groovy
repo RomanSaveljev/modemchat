@@ -1,6 +1,10 @@
 package com.github.RomanSaveljev.modemchat.syntax
 
 class EchoInputTest extends GroovyTestCase {
+    private static Queue<Character> convert(String command) {
+        command.toCharArray().collect({ it as Character }) as Queue<Character>
+    }
+
     void testNoEcho() {
         def echo = new EchoInput() {
             @Override
@@ -8,12 +12,10 @@ class EchoInputTest extends GroovyTestCase {
                 return false
             }
         }
-        def input = [1, 2, 3] as Queue
+        def input = convert("ABC")
         def output = echo.consumeAndEchoOne(input)
         assert output.empty
-        assert input.poll() == 2
-        assert input.poll() == 3
-        assert input.empty
+        assert input == convert("BC")
     }
     void testEcho() {
         def echo = new EchoInput() {
@@ -22,12 +24,9 @@ class EchoInputTest extends GroovyTestCase {
                 return true
             }
         }
-        def input = [1, 2, 3] as Queue
+        def input = convert("ABC")
         def output = echo.consumeAndEchoOne(input)
-        assert output[0] == 1
-        assert output.size() == 1
-        assert input.poll() == 2
-        assert input.poll() == 3
-        assert input.empty
+        assert output == convert("A")
+        assert input == convert("BC")
     }
 }

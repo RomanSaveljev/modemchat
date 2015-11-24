@@ -10,7 +10,7 @@ class CompactCommandLineTest extends GroovyTestCase {
         }
 
         @Override
-        List<Character> getCommandLine() {
+        Queue<Character> getCommandLine() {
             CompactCommandLineTest.this.commandLine
         }
     }

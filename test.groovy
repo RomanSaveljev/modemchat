@@ -5,7 +5,8 @@ import com.github.RomanSaveljev.modemchat.ModemChat
 println System.getProperty("org.slf4j.simpleLogger.logFile")
 println System.getProperty("org.slf4j.simpleLogger.defaultLogLevel")
 
-def input = new ByteArrayInputStream("AT".getBytes())
+def input = new ByteArrayInputStream("ATA\r".getBytes())
 def chat = new ModemChat(input, System.out)
 chat.v250.echo = true
+chat.v250.s3 = '\r'
 chat.loop()
