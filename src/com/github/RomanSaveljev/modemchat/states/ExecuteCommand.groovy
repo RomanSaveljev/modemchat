@@ -13,6 +13,7 @@ class ExecuteCommand implements StateHandler {
     interface Api {
         final static String ERROR = "error"
         final static String START = "start"
+        final static String END = "end"
 
         void goTo(String mixin)
 

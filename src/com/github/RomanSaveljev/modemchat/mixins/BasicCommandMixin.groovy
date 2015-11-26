@@ -27,8 +27,8 @@ class BasicCommandMixin {
         // Try to remain open to possibilities.
         // Basic commands are special in that they do not have a prefix. An artificial " "
         // will be added in front, so a mixin should declare E command handler as " E".
-        for (it in "ABCDEFGHIJKLMNOPQRSTUVWXYZ&".split('')) {
-            cmd.mix(it, EXTRACT_BASIC_COMMAND)
+        for (it in "ABCDEFGHIJKLMNOPQRSTUVWXYZ&".toCharArray()) {
+            cmd.mix(it as String, EXTRACT_BASIC_COMMAND)
         }
     }
 }
