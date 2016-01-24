@@ -8,6 +8,11 @@ class StateFactory {
     static final char SMALL_T = 't'
 
     @SuppressWarnings("GrMethodMayBeStatic")
+    StateHandler buildBegin(StatefulContext context) {
+        new Begin(context)
+    }
+
+    @SuppressWarnings("GrMethodMayBeStatic")
     StateHandler buildPrefix(StatefulContext context) {
         new Prefix(context)
     }

@@ -35,7 +35,7 @@ abstract class FormatResultCode {
 
     abstract def getS4()
 
-    List formatResultCode(List result) {
+    List<Character> formatResultCode(List<Character> result) {
         assert !result.empty
         def output = []
         if (!suppressed) {

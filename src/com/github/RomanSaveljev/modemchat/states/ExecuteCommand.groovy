@@ -3,6 +3,9 @@ package com.github.RomanSaveljev.modemchat.states
 import com.github.RomanSaveljev.modemchat.context.StatefulContext
 import com.github.RomanSaveljev.modemchat.mixins.BasicCommandMixin
 import com.github.RomanSaveljev.modemchat.mixins.BehaviorMixin
+import com.github.RomanSaveljev.modemchat.mixins.EndMixin
+import com.github.RomanSaveljev.modemchat.mixins.ErrorMixin
+import com.github.RomanSaveljev.modemchat.mixins.ExtendedCommandMixin
 import com.github.RomanSaveljev.modemchat.mixins.StartMixin
 import groovy.json.StringEscapeUtils
 import org.codehaus.groovy.runtime.MethodClosure
@@ -53,6 +56,9 @@ class ExecuteCommand implements StateHandler {
         this.context = context
         StartMixin.mix(this)
         BasicCommandMixin.mix(this)
+        ExtendedCommandMixin.mix(this)
+        ErrorMixin.mix(this)
+        EndMixin.mix(this)
     }
 
     @Override
@@ -64,7 +70,7 @@ class ExecuteCommand implements StateHandler {
         return mixins[activeMixin].input(api, data)
     }
 
-    // Have to keep the interface simple, so other JVM language could tap into it
+    // Have to keep the interface simple, so other JVM languages could tap into
     ExecuteCommand mix(String name, BehaviorMixin mixin) {
         mixins[name] = mixin
         return this

@@ -40,9 +40,9 @@ class ModemChat implements StatefulContext, NotificationListener {
 
     private void feedData(List<Byte> data) {
         def characters = data.collect({new Character(it as char)}) as Queue<Character>
-        // null is a special state, which means starting state
+        // null is a special state, which means the starting state
         if (!stateHandler) {
-            stateHandler = stateFactory.buildPrefix(this)
+            stateHandler = stateFactory.buildBegin(this)
         }
         // always kick the handler at least once - could be a notification
         singleDataLoop(characters)

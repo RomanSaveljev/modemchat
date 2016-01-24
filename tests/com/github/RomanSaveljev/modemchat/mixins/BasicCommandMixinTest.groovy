@@ -1,7 +1,10 @@
 package com.github.RomanSaveljev.modemchat.mixins
 
+import com.github.RomanSaveljev.modemchat.context.NotificationListener
 import com.github.RomanSaveljev.modemchat.context.StatefulContext
+import com.github.RomanSaveljev.modemchat.context.V250
 import com.github.RomanSaveljev.modemchat.states.ExecuteCommand
+import com.github.RomanSaveljev.modemchat.states.StateFactory
 import com.github.RomanSaveljev.modemchat.states.StateHandler
 
 class BasicCommandMixinTest extends GroovyTestCase {
@@ -23,7 +26,44 @@ class BasicCommandMixinTest extends GroovyTestCase {
 
         @Override
         StatefulContext getContext() {
-            return null
+            return new StatefulContext() {
+                @Override
+                V250 getV250() {
+                    return null
+                }
+
+                @Override
+                StateHandler getStateHandler() {
+                    return null
+                }
+
+                @Override
+                void setStateHandler(StateHandler stateHandler) {
+
+                }
+
+                @Override
+                List<Character> getRepeatable() {
+                    return [] as List<Character>
+                }
+
+                @Override
+                Queue<Character> getCommandLine() {
+                    def cmd = [] as Queue<Character>
+                    cmd.offer('a' as Character)
+                    return cmd
+                }
+
+                @Override
+                StateFactory getStateFactory() {
+                    return null
+                }
+
+                @Override
+                NotificationListener getListener() {
+                    return null
+                }
+            }
         }
     }
     boolean testing

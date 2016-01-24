@@ -2,7 +2,7 @@ package com.github.RomanSaveljev.modemchat.syntax
 
 class CompactCommandLineTest extends GroovyTestCase {
     private List<Character> repeatable
-    private List<Character> commandLine
+    private Queue<Character> commandLine
     def compactor = new CompactCommandLine() {
         @Override
         List<Character> getRepeatable() {
@@ -17,8 +17,8 @@ class CompactCommandLineTest extends GroovyTestCase {
 
     @Override
     void setUp() {
-        repeatable = []
-        commandLine = []
+        repeatable = [] as List<Character>
+        commandLine = [] as Queue<Character>
     }
 
     void testUpperCase() {
