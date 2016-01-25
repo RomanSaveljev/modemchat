@@ -16,7 +16,7 @@ class ModemChat implements StatefulContext, NotificationListener {
     StateFactory stateFactory = new StateFactory()
     StateHandler stateHandler
     List<Character> repeatable = []
-    Queue<Character> commandLine = []
+    List<Character> commandLine = []
     NotificationListener listener = this
     private def executor = Executors.newSingleThreadExecutor()
     private InputStream input
@@ -33,13 +33,13 @@ class ModemChat implements StatefulContext, NotificationListener {
         output.flush()
     }
 
-    private void singleDataLoop(Queue<Character> data) {
+    private void singleDataLoop(List<Character> data) {
         def buffer = stateHandler.input(data)
         writeOutput(buffer)
     }
 
     private void feedData(List<Byte> data) {
-        def characters = data.collect({new Character(it as char)}) as Queue<Character>
+        def characters = data.collect({new Character(it as char)})
         // null is a special state, which means the starting state
         if (!stateHandler) {
             stateHandler = stateFactory.buildBegin(this)

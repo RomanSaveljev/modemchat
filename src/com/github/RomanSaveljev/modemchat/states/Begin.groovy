@@ -15,12 +15,13 @@ class Begin implements StateHandler {
         this.context = context
     }
 
-    List<Character> input(Queue<Character> data) {
+    List<Character> input(List<Character> data) {
         if (context.commandLine.isEmpty()) {
             context.stateHandler = context.stateFactory.buildPrefix(context)
         } else {
-            context.stateHandler = context.stateFactory.buildExecuteCommand(context)
+            // Continuing with the existing command line
+            context.stateHandler = context.stateFactory.buildStripSemicolon(context)
         }
-        return [] as List<Character>
+        return []
     }
 }

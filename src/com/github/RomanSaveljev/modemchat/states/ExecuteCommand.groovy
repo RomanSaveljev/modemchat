@@ -6,6 +6,7 @@ import com.github.RomanSaveljev.modemchat.mixins.BehaviorMixin
 import com.github.RomanSaveljev.modemchat.mixins.EndMixin
 import com.github.RomanSaveljev.modemchat.mixins.ErrorMixin
 import com.github.RomanSaveljev.modemchat.mixins.ExtendedCommandMixin
+import com.github.RomanSaveljev.modemchat.mixins.OkMixin
 import com.github.RomanSaveljev.modemchat.mixins.StartMixin
 import groovy.json.StringEscapeUtils
 import org.codehaus.groovy.runtime.MethodClosure
@@ -17,6 +18,7 @@ class ExecuteCommand implements StateHandler {
         final static String ERROR = "error"
         final static String START = "start"
         final static String END = "end"
+        final static String OK = "ok"
 
         void goTo(String mixin)
 
@@ -58,11 +60,12 @@ class ExecuteCommand implements StateHandler {
         BasicCommandMixin.mix(this)
         ExtendedCommandMixin.mix(this)
         ErrorMixin.mix(this)
+        OkMixin.mix(this)
         EndMixin.mix(this)
     }
 
     @Override
-    List<Character> input(Queue<Character> data) {
+    List<Character> input(List<Character> data) {
         logger.debug("input(${StringEscapeUtils.escapeJava(data.join(""))})")
         // must be there unless goTo was skipped
         assert mixins.containsKey(activeMixin)
@@ -79,7 +82,7 @@ class ExecuteCommand implements StateHandler {
     ExecuteCommand mix(String name, MethodClosure mixin) {
         def obj = new BehaviorMixin() {
             @Override
-            List<Character> input(Api api, Queue<Character> data) {
+            List<Character> input(Api api, List<Character> data) {
                 mixin(api, data) as List<Character>
             }
         }

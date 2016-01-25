@@ -9,7 +9,7 @@ class EndMixin implements BehaviorMixin {
         cmd.mix(ExecuteCommand.Api.END, new EndMixin())
     }
     @Override
-    List<Character> input(ExecuteCommand.Api api, Queue<Character> data) {
+    List<Character> input(ExecuteCommand.Api api, List<Character> data) {
         data.clear()
         api.context.commandLine.clear()
         api.changeState(null)

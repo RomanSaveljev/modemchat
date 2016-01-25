@@ -8,9 +8,9 @@ abstract class EchoInput {
     private final Logger logger = LoggerFactory.getLogger(EchoInput.class)
 
     abstract boolean getEchoEnabled()
-    List<Character> consumeAndEchoOne(Queue<Character> data) {
+    List<Character> consumeAndEchoOne(List<Character> data) {
         assert !data.empty
-        def c = data.poll()
+        def c = data.removeAt(0)
         logger.debug("${StringEscapeUtils.escapeJava(c.toString())} consumed")
         if (echoEnabled) {
             return [c]

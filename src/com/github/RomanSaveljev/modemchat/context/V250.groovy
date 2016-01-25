@@ -4,10 +4,10 @@ class V250 {
     interface Uses {
         V250 getV250()
     }
-    boolean echo
-    char s3
-    char s4
-    char s5
-    boolean suppressed
-    boolean verbose
+    boolean echo = true
+    char s3 = '\r'
+    char s4 = '\n'
+    char s5 = '\b'
+    boolean suppressed = false
+    boolean verbose = true
 }

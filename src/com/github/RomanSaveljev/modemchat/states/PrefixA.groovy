@@ -21,24 +21,24 @@ abstract class PrefixA implements StateHandler {
         this.context = context
     }
 
-    List<Character> input(Queue<Character> data) {
+    List<Character> input(List<Character> data) {
         logger.debug("input(${StringEscapeUtils.escapeJava(data.join(""))})")
         data.empty ? [] : doInput(data)
     }
 
-    private List<Character> doInput(Queue<Character> data) {
-        Character c = data.peek()
+    private List<Character> doInput(List<Character> data) {
+        Character c = data.head()
         if (isAttention(c)) {
             context.stateHandler = context.stateFactory.buildAssembleCommand(context)
             return echo.consumeAndEchoOne(data)
         } else if (c == SOLIDUS) {
             def output = echo.consumeAndEchoOne(data)
-            data.offer(context.v250.s3)
+            data.push(context.v250.s3)
             // previously assembled command line is fed in again as if a real modem produced it
             // helps to remove code duplication
             def repeatable = [] as ArrayList<Character>
             repeatable.addAll(context.repeatable)
-            repeatable.reverse().each { data.offer(it) }
+            repeatable.reverse().each { data.push(it) }
             context.stateHandler = context.stateFactory.buildRepeatCommand(context)
             return output
         } else {

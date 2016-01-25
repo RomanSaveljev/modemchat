@@ -48,10 +48,8 @@ class BasicCommandMixinTest extends GroovyTestCase {
                 }
 
                 @Override
-                Queue<Character> getCommandLine() {
-                    def cmd = [] as Queue<Character>
-                    cmd.offer('a' as Character)
-                    return cmd
+                List<Character> getCommandLine() {
+                    ['a' as Character]
                 }
 
                 @Override
@@ -110,7 +108,7 @@ class BasicCommandMixinTest extends GroovyTestCase {
         def exec = new ExecuteCommand(null) {
             @Override
             ExecuteCommand mix(String name, BehaviorMixin mixin) {
-                def input = ['z' as Character] as Queue<Character>
+                def input = ['z' as Character]
                 if (testing) {
                     mixin.input(api, input)
                     assert !input.empty

@@ -10,15 +10,15 @@ class CompactCommandLineTest extends GroovyTestCase {
         }
 
         @Override
-        Queue<Character> getCommandLine() {
+        List<Character> getCommandLine() {
             CompactCommandLineTest.this.commandLine
         }
     }
 
     @Override
     void setUp() {
-        repeatable = [] as List<Character>
-        commandLine = [] as Queue<Character>
+        repeatable = []
+        commandLine = []
     }
 
     void testUpperCase() {

@@ -13,6 +13,11 @@ class StateFactory {
     }
 
     @SuppressWarnings("GrMethodMayBeStatic")
+    StateHandler buildStripSemicolon(StatefulContext context) {
+        new StripSemicolon(context)
+    }
+
+    @SuppressWarnings("GrMethodMayBeStatic")
     StateHandler buildPrefix(StatefulContext context) {
         new Prefix(context)
     }

@@ -6,7 +6,7 @@ import com.github.RomanSaveljev.modemchat.syntax.BasicCommand
 class BasicCommandMixin {
     private static final def EXTRACT_BASIC_COMMAND = new BehaviorMixin() {
         @Override
-        List<Character> input(ExecuteCommand.Api api, Queue<Character> data) {
+        List<Character> input(ExecuteCommand.Api api, List<Character> data) {
             assert !api.context.commandLine.empty
             def basic = BasicCommand.next(api.context.commandLine)
             if (!basic.empty) {

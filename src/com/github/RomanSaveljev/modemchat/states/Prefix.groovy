@@ -23,13 +23,13 @@ class Prefix implements StateHandler {
     }
 
     @Override
-    List<Character> input(Queue<Character> data) {
+    List<Character> input(List<Character> data) {
         logger.debug("input(${StringEscapeUtils.escapeJava(data.join(""))})")
         data.empty ? [] : doInput(data)
     }
 
-    private List<Character> doInput(Queue<Character> data) {
-        def c = data.peek()
+    private List<Character> doInput(List<Character> data) {
+        def c = data.head()
         if (c == CAPITAL_A) {
             context.stateHandler = context.stateFactory.buildCapitalA(context)
         } else if (c == SMALL_A) {

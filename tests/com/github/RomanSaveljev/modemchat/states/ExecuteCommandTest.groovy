@@ -6,16 +6,12 @@ import com.github.RomanSaveljev.modemchat.context.V250
 import com.github.RomanSaveljev.modemchat.mixins.BehaviorMixin
 
 class ExecuteCommandTest extends GroovyTestCase {
-    private static Queue<Character> convert(String command) {
-        command.toCharArray().collect({ it as Character }) as Queue<Character>
-    }
-
     private class Notification implements NotificationListener {
-        ArrayList<Character> buffer = []
+        List<Character> buffer = []
         ExecuteCommand exec
         @Override
         void postNotification() {
-            def result = exec.input([] as Queue<Character>)
+            def result = exec.input([])
             buffer.addAll(result)
         }
     }
@@ -24,7 +20,7 @@ class ExecuteCommandTest extends GroovyTestCase {
         V250 v250
         StateHandler stateHandler
         List<Character> repeatable
-        Queue<Character> commandLine
+        List<Character> commandLine
         StateFactory stateFactory
         NotificationListener listener
     }
@@ -33,8 +29,8 @@ class ExecuteCommandTest extends GroovyTestCase {
         def context = new Context()
         def exec = new ExecuteCommand(context)
         context.listener = new Notification(exec: exec)
-        context.commandLine = convert("A")
-        shouldFail({exec.input([] as Queue<Character>)})
+        context.commandLine = "A".toCharArray()
+        shouldFail({exec.input([])})
     }
 
     void testBasicCommand() {
@@ -42,15 +38,15 @@ class ExecuteCommandTest extends GroovyTestCase {
         def exec = new ExecuteCommand(context)
         exec.mix(" A", new BehaviorMixin() {
             @Override
-            List<Character> input(ExecuteCommand.Api api, Queue<Character> data) {
-                return convert("HELLO!")
+            List<Character> input(ExecuteCommand.Api api, List<Character> data) {
+                return "HELLO!".toCharArray()
             }
         })
         def notification = new Notification(exec: exec)
         context.listener = notification
-        context.commandLine = convert("A")
-        exec.input([] as Queue<Character>)
-        assert notification.buffer == convert("HELLO!")
+        context.commandLine = "A".toCharArray()
+        exec.input([])
+        assert notification.buffer == "HELLO!".toCharArray().toList()
     }
 
     void testExtendedCommand() {
@@ -58,14 +54,14 @@ class ExecuteCommandTest extends GroovyTestCase {
         def exec = new ExecuteCommand(context)
         exec.mix("+CGMI", new BehaviorMixin() {
             @Override
-            List<Character> input(ExecuteCommand.Api api, Queue<Character> data) {
-                return convert("BOO!")
+            List<Character> input(ExecuteCommand.Api api, List<Character> data) {
+                "BOO!".toCharArray()
             }
         })
         def notification = new Notification(exec: exec)
         context.listener = notification
-        context.commandLine = convert("+CGMI")
-        exec.input([] as Queue<Character>)
-        assert notification.buffer == convert("BOO!")
+        context.commandLine = "+CGMI".toCharArray()
+        exec.input([])
+        assert notification.buffer == "BOO!".toCharArray().toList()
     }
 }

@@ -7,7 +7,7 @@ class ExtendedCommandMixin {
     static void mix(ExecuteCommand cmd) {
         cmd.mix("+", new BehaviorMixin() {
             @Override
-            List<Character> input(ExecuteCommand.Api api, Queue<Character> data) {
+            List<Character> input(ExecuteCommand.Api api, List<Character> data) {
                 assert !api.context.commandLine.empty
                 def extended = ExtendedCommand.next(api.context.commandLine)
                 if (!extended.empty) {

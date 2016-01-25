@@ -5,10 +5,11 @@ import com.github.RomanSaveljev.modemchat.states.StateHandler
 
 interface StatefulContext {
     V250 getV250()
+    void setV250(V250 v250)
     StateHandler getStateHandler()
     void setStateHandler(StateHandler stateHandler)
     List<Character> getRepeatable()
-    Queue<Character> getCommandLine()
+    List<Character> getCommandLine()
     StateFactory getStateFactory()
     NotificationListener getListener()
 }
